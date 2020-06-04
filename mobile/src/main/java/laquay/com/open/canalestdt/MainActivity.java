@@ -46,14 +46,11 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_radio_channels) {
                 fragment = RadioFragment.newInstance();
                 fragmentTAG = RadioFragment.TAG;
-            } else if (id == R.id.nav_settings) {
-                fragment = SettingsFragment.newInstance();
-                fragmentTAG = SettingsFragment.TAG;
             }
 
             if (fragment != null) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment, fragmentTAG);
+                ft.replace(R.id.content_frame, TVFragment.newInstance(), fragmentTAG);
                 ft.commit();
             }
 
@@ -71,12 +68,17 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferencesController.init(this);
 
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, TVFragment.newInstance(), "TV");
+        ft.commit();
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navView.setSelectedItemId(R.id.nav_tv_channels);
 
-        checkAppVersion();
+        //checkAppVersion();
     }
 
     private void checkAppVersion() {

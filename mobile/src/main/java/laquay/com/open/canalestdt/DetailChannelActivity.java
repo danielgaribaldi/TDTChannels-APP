@@ -140,10 +140,13 @@ public class DetailChannelActivity extends AppCompatActivity {
                     }
                 });
         VolleyController.getInstance(this).addToQueue(request);
+
+
+
     }
 
     private boolean isReproducibleWithExoplayer(String url) {
-        return url.contains("m3u8");
+        return true;
     }
 
     private boolean isReproducibleWithYoutube(String url) {
@@ -165,7 +168,6 @@ public class DetailChannelActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }

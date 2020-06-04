@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +37,7 @@ import laquay.com.open.canalestdt.model.Channel;
 import laquay.com.open.canalestdt.model.Community;
 import laquay.com.open.canalestdt.model.Country;
 import laquay.com.open.canalestdt.utils.SourcesManagement;
+import laquay.com.open.canalestdt.utils.VideoUtils;
 
 import static laquay.com.open.canalestdt.DetailChannelActivity.EXTRA_MESSAGE;
 import static laquay.com.open.canalestdt.DetailChannelActivity.EXTRA_TYPE;
@@ -133,10 +136,12 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
     }
 
     public void showDetails(ChannelList channel) {
-        Intent intent = new Intent(getActivity(), DetailChannelActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, channel);
-        intent.putExtra(EXTRA_TYPE, TYPE_TV);
-        startActivity(intent);
+
+        String source =  channel.getChannel().getOptions().get(0).getUrl();
+
+        DialogFragment newFragment = VideoDialogFragment.newInstance(source);
+        newFragment.show(getFragmentManager(), "VideoDialog");
+
     }
 
     @Override

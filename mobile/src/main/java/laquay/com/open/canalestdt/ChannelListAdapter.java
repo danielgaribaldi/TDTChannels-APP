@@ -48,7 +48,7 @@ public class ChannelListAdapter extends ListAdapter<ChannelList, ChannelListAdap
         final ChannelList channel = getItem(position);
 
         holder.titleView.setText(channel.getChannel().getName());
-        holder.subtitleView.setText(String.format("%s - %s", channel.getCountryName(), channel.getCommunityName()));
+        holder.subtitleView.setText(channel.getCommunityName());
 
         String imageUrl = channel.getChannel().getLogo();
         Glide.with(context).load(imageUrl).placeholder(R.mipmap.ic_launcher).fallback(R.mipmap.ic_launcher).into(holder.imageView);
