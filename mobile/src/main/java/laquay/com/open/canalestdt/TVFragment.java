@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import laquay.com.open.canalestdt.component.ChannelListItem;
 import laquay.com.open.canalestdt.controller.APIController;
 import laquay.com.open.canalestdt.model.Channel;
-import laquay.com.open.canalestdt.model.Community;
 import laquay.com.open.canalestdt.model.Country;
 import laquay.com.open.canalestdt.utils.SourcesManagement;
 
@@ -42,7 +41,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
     private RecyclerView channelRecyclerView;
     private ChannelListAdapter channelAdapter;
     private ArrayList<Country> countries;
-    private ArrayList<Community> communities;
+    private ArrayList<Country.ChannelGroup> communities;
     private ArrayList<ChannelListItem> channelLists;
     private ChannelItemFilter mFilter = new ChannelItemFilter();
     private boolean isShowingFavorites;
@@ -102,7 +101,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
         channelLists = new ArrayList<>();
 
         for (int i = 0; i < countries.size(); ++i) {
-            communities = countries.get(i).getCommunities();
+            communities = countries.get(i).getChannelGroups();
 
             for (int j = 0; j < communities.size(); ++j) {
                 ArrayList<Channel> channels = communities.get(j).getChannels();
@@ -131,9 +130,9 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
 
     public void openChannel(ChannelListItem channel) {
 
-        String source =  channel.getChannel().getOptions().get(0).getUrl();
+        Channel.Source source =  channel.getChannel().getSources().get(0);
 
-        DialogFragment newFragment = VideoDialogFragment.newInstance(source);
+        DialogFragment newFragment = ExoPlayerFragment.newInstance(source);
         newFragment.show(getFragmentManager(), "VideoDialog");
 
     }
@@ -191,7 +190,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
                     final LinearLayout filterLL = v.findViewById(R.id.filters_alert_filter_channel_ll);
 
                     for (int i = 0; i < countries.size(); ++i) {
-                        communities = countries.get(i).getCommunities();
+                        communities = countries.get(i).getChannelGroups();
 
                         TextView country = new TextView(getActivity());
                         country.setText(countries.get(i).getName());

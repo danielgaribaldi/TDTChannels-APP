@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import laquay.com.open.canalestdt.component.ChannelListItem;
 import laquay.com.open.canalestdt.controller.VolleyController;
 import laquay.com.open.canalestdt.model.Channel;
-import laquay.com.open.canalestdt.model.ChannelOptions;
 import laquay.com.open.canalestdt.utils.SourcesManagement;
 import laquay.com.open.canalestdt.utils.VideoUtils;
 
@@ -90,14 +89,14 @@ public class DetailChannelActivity extends AppCompatActivity {
     }
 
     private void loadChannel() {
-        channelNameTV.setText(channel.getName());
+      /*  channelNameTV.setText(channel.getName());
         channelURLTV.setText(channel.getWeb());
 
         // Load first option
-        if (!channel.getOptions().isEmpty()) {
+        if (!channel.getSources().isEmpty()) {
             // Fill available options
             ArrayList<String> sources = new ArrayList<>();
-            for (ChannelOptions channelOption : channel.getOptions()) {
+            for (Channel.Source channelOption : channel.getSources()) {
                 sources.add(channelOption.getUrl());
             }
 
@@ -108,7 +107,7 @@ public class DetailChannelActivity extends AppCompatActivity {
             channelSourceLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String source = (String) channelSourceLV.getItemAtPosition(position);
+                    Channel.Source source = (String) channelSourceLV.getItemAtPosition(position);
                     switch (typeOfStream) {
                         case TYPE_TV:
                             if (isReproducibleWithExoplayer(source)) {
@@ -141,7 +140,7 @@ public class DetailChannelActivity extends AppCompatActivity {
                 });
         VolleyController.getInstance(this).addToQueue(request);
 
-
+*/
 
     }
 
@@ -153,9 +152,9 @@ public class DetailChannelActivity extends AppCompatActivity {
         return url.contains("youtube") || url.contains("youtu.be");
     }
 
-    private void loadVideo(String streamURL) {
+    private void loadVideo(Channel.Source source) {
         Toast.makeText(this, getString(R.string.channel_detail_reproducing_tv), Toast.LENGTH_SHORT).show();
-        DialogFragment newFragment = VideoDialogFragment.newInstance(streamURL);
+        DialogFragment newFragment = ExoPlayerFragment.newInstance(source);
         newFragment.show(getSupportFragmentManager(), "VideoDialog");
     }
 
