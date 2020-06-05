@@ -28,7 +28,7 @@ import com.android.volley.toolbox.ImageRequest;
 
 import java.util.ArrayList;
 
-import laquay.com.open.canalestdt.component.ChannelList;
+import laquay.com.open.canalestdt.component.ChannelListItem;
 import laquay.com.open.canalestdt.controller.VolleyController;
 import laquay.com.open.canalestdt.model.Channel;
 import laquay.com.open.canalestdt.model.ChannelOptions;
@@ -65,7 +65,7 @@ public class DetailChannelActivity extends AppCompatActivity {
 
         Bundle intentExtras = getIntent().getExtras();
         if (intentExtras != null) {
-            ChannelList channelList = (ChannelList) intentExtras.getSerializable(EXTRA_MESSAGE);
+            ChannelListItem channelList = (ChannelListItem) intentExtras.getSerializable(EXTRA_MESSAGE);
             if (channelList != null) {
                 channel = channelList.getChannel();
                 getSupportActionBar().setTitle(channelList.getChannel().getName());

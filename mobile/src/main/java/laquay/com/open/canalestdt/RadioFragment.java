@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import laquay.com.open.canalestdt.component.ChannelList;
+import laquay.com.open.canalestdt.component.ChannelListItem;
 import laquay.com.open.canalestdt.controller.APIController;
 import laquay.com.open.canalestdt.model.Channel;
 import laquay.com.open.canalestdt.model.Community;
@@ -48,7 +48,7 @@ public class RadioFragment extends Fragment implements APIController.ResponseSer
     private ChannelListAdapter channelAdapter;
     private ArrayList<Country> countries;
     private ArrayList<Community> communities;
-    private ArrayList<ChannelList> channelLists;
+    private ArrayList<ChannelListItem> channelLists;
     private ChannelItemFilter mFilter = new ChannelItemFilter();
     private boolean isShowingFavorites;
 
@@ -74,7 +74,7 @@ public class RadioFragment extends Fragment implements APIController.ResponseSer
         channelRecyclerView = rootView.findViewById(R.id.channel_main_lv);
         channelAdapter = new ChannelListAdapter(getContext(), new ChannelListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClickListener(ChannelList channelList) {
+            public void onItemClickListener(ChannelListItem channelList) {
                 showDetails(channelList);
             }
         });
@@ -113,7 +113,7 @@ public class RadioFragment extends Fragment implements APIController.ResponseSer
                 if (isShowingFavorites) {
                     for (int k = 0; k < channels.size(); ++k) {
                         if (SourcesManagement.isRadioChannelFavorite(channels.get(k).getName())) {
-                            channelLists.add(new ChannelList(countries.get(i).getName(),
+                            channelLists.add(new ChannelListItem(countries.get(i).getName(),
                                     communities.get(j).getName(), channels.get(k)));
                         }
                     }
@@ -121,7 +121,7 @@ public class RadioFragment extends Fragment implements APIController.ResponseSer
                     boolean isCommunityShown = SourcesManagement.isRadioCommunitySelected("" + communities.get(j).getName());
                     if (isCommunityShown) {
                         for (int k = 0; k < channels.size(); ++k) {
-                            channelLists.add(new ChannelList(countries.get(i).getName(),
+                            channelLists.add(new ChannelListItem(countries.get(i).getName(),
                                     communities.get(j).getName(), channels.get(k)));
                         }
                     }
@@ -132,7 +132,7 @@ public class RadioFragment extends Fragment implements APIController.ResponseSer
         channelAdapter.submitList(channelLists);
     }
 
-    public void showDetails(ChannelList channel) {
+    public void showDetails(ChannelListItem channel) {
         Intent intent = new Intent(getActivity(), DetailChannelActivity.class);
         intent.putExtra(EXTRA_MESSAGE, channel);
         intent.putExtra(EXTRA_TYPE, TYPE_RADIO);
@@ -292,11 +292,11 @@ public class RadioFragment extends Fragment implements APIController.ResponseSer
             String filterString = constraint.toString().toLowerCase();
             FilterResults results = new FilterResults();
 
-            final ArrayList<ChannelList> filteredChannels = new ArrayList<>();
+            final ArrayList<ChannelListItem> filteredChannels = new ArrayList<>();
 
             String channelNameToFilter;
             for (int i = 0; i < channelLists.size(); i++) {
-                ChannelList channelList = channelLists.get(i);
+                ChannelListItem channelList = channelLists.get(i);
                 channelNameToFilter = channelList.getChannel().getName();
 
                 if (channelNameToFilter.toLowerCase().contains(filterString)) {
@@ -312,7 +312,7 @@ public class RadioFragment extends Fragment implements APIController.ResponseSer
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            channelAdapter.submitList((ArrayList<ChannelList>) results.values);
+            channelAdapter.submitList((ArrayList<ChannelListItem>) results.values);
         }
     }
 }

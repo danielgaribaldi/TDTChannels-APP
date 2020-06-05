@@ -16,7 +16,6 @@ import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
@@ -25,8 +24,6 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 
 public class VideoDialogFragment extends DialogFragment implements Player.EventListener {
@@ -55,7 +52,7 @@ public class VideoDialogFragment extends DialogFragment implements Player.EventL
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
     }
 
-    public URL getFinalURL(URL url) {
+    private URL resolveRedirectedURL(URL url) {
 
         try {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -64,7 +61,6 @@ public class VideoDialogFragment extends DialogFragment implements Player.EventL
             con.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
             con.addRequestProperty("Referer", "https://www.google.com/");
             con.connect();
-            //con.getInputStream();
             int resCode = con.getResponseCode();
             if (resCode == HttpURLConnection.HTTP_SEE_OTHER
                     || resCode == HttpURLConnection.HTTP_MOVED_PERM
@@ -73,7 +69,7 @@ public class VideoDialogFragment extends DialogFragment implements Player.EventL
                 if (Location.startsWith("/")) {
                     Location = url.getProtocol() + "://" + url.getHost() + Location;
                 }
-                return getFinalURL(new URL(Location));
+                return resolveRedirectedURL(new URL(Location));
             }
         }
         catch (Exception e) {
@@ -130,7 +126,7 @@ public class VideoDialogFragment extends DialogFragment implements Player.EventL
 
             try {
                 MediaSource videoSource = new HlsMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(Uri.parse(getFinalURL(new URL(streamURL)).toString()));
+                        .createMediaSource(Uri.parse(resolveRedirectedURL(new URL(streamURL)).toString()));
 
                 // Prepare the player with the source.
                 player.prepare(videoSource);

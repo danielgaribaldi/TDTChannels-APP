@@ -1,7 +1,6 @@
 package laquay.com.open.canalestdt;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,17 +29,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import laquay.com.open.canalestdt.component.ChannelList;
+import laquay.com.open.canalestdt.component.ChannelListItem;
 import laquay.com.open.canalestdt.controller.APIController;
 import laquay.com.open.canalestdt.model.Channel;
 import laquay.com.open.canalestdt.model.Community;
 import laquay.com.open.canalestdt.model.Country;
 import laquay.com.open.canalestdt.utils.SourcesManagement;
-import laquay.com.open.canalestdt.utils.VideoUtils;
-
-import static laquay.com.open.canalestdt.DetailChannelActivity.EXTRA_MESSAGE;
-import static laquay.com.open.canalestdt.DetailChannelActivity.EXTRA_TYPE;
-import static laquay.com.open.canalestdt.DetailChannelActivity.TYPE_TV;
 
 public class TVFragment extends Fragment implements APIController.ResponseServerCallback {
     public static final String TAG = TVFragment.class.getSimpleName();
@@ -50,7 +43,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
     private ChannelListAdapter channelAdapter;
     private ArrayList<Country> countries;
     private ArrayList<Community> communities;
-    private ArrayList<ChannelList> channelLists;
+    private ArrayList<ChannelListItem> channelLists;
     private ChannelItemFilter mFilter = new ChannelItemFilter();
     private boolean isShowingFavorites;
 
@@ -68,7 +61,8 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
         setUpElements();
         setUpListeners();
 
-        APIController.getInstance().loadChannels(APIController.TypeOfRequest.TV, false, getContext(), this);
+        APIController.getInstance().loadChannels(APIController.TypeOfRequest.TV,
+                false, getContext(), this);
 
         return rootView;
     }
@@ -77,8 +71,8 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
         channelRecyclerView = rootView.findViewById(R.id.channel_main_lv);
         channelAdapter = new ChannelListAdapter(getContext(), new ChannelListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClickListener(ChannelList channelList) {
-                showDetails(channelList);
+            public void onItemClickListener(ChannelListItem channelList) {
+                openChannel(channelList);
             }
         });
         channelAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -116,7 +110,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
                 if (isShowingFavorites) {
                     for (int k = 0; k < channels.size(); ++k) {
                         if (SourcesManagement.isTVChannelFavorite(channels.get(k).getName())) {
-                            channelLists.add(new ChannelList(countries.get(i).getName(),
+                            channelLists.add(new ChannelListItem(countries.get(i).getName(),
                                     communities.get(j).getName(), channels.get(k)));
                         }
                     }
@@ -124,7 +118,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
                     boolean isCommunityShown = SourcesManagement.isTVCommunitySelected("" + communities.get(j).getName());
                     if (isCommunityShown) {
                         for (int k = 0; k < channels.size(); ++k) {
-                            channelLists.add(new ChannelList(countries.get(i).getName(),
+                            channelLists.add(new ChannelListItem(countries.get(i).getName(),
                                     communities.get(j).getName(), channels.get(k)));
                         }
                     }
@@ -135,7 +129,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
         channelAdapter.submitList(channelLists);
     }
 
-    public void showDetails(ChannelList channel) {
+    public void openChannel(ChannelListItem channel) {
 
         String source =  channel.getChannel().getOptions().get(0).getUrl();
 
@@ -297,11 +291,11 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
             String filterString = constraint.toString().toLowerCase();
             FilterResults results = new FilterResults();
 
-            final ArrayList<ChannelList> filteredChannels = new ArrayList<>();
+            final ArrayList<ChannelListItem> filteredChannels = new ArrayList<>();
 
             String channelNameToFilter;
             for (int i = 0; i < channelLists.size(); i++) {
-                ChannelList channelList = channelLists.get(i);
+                ChannelListItem channelList = channelLists.get(i);
                 channelNameToFilter = channelList.getChannel().getName();
 
                 if (channelNameToFilter.toLowerCase().contains(filterString)) {
@@ -317,7 +311,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            channelAdapter.submitList((ArrayList<ChannelList>) results.values);
+            channelAdapter.submitList((ArrayList<ChannelListItem>) results.values);
         }
     }
 }
