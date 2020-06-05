@@ -1,6 +1,7 @@
 package laquay.com.open.canalestdt;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -130,11 +131,9 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
 
     public void openChannel(ChannelListItem channel) {
 
-        Channel.Source source =  channel.getChannel().getSources().get(0);
-
-        DialogFragment newFragment = ExoPlayerFragment.newInstance(source);
-        newFragment.show(getFragmentManager(), "VideoDialog");
-
+        Intent intent = new Intent(getContext(),VideoPlayerActivity.class);
+        intent.putExtra(VideoPlayerActivity.CHANNEL, channel.getChannel());
+        startActivity(intent);
     }
 
     @Override

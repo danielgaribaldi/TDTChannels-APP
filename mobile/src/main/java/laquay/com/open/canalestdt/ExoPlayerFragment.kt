@@ -22,7 +22,7 @@ import laquay.com.open.canalestdt.model.Channel
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ExoPlayerFragment : DialogFragment(), Player.EventListener {
+class ExoPlayerFragment : DialogFragment() {
 
     companion object {
         private const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"
@@ -33,7 +33,7 @@ class ExoPlayerFragment : DialogFragment(), Player.EventListener {
         fun newInstance(channel: Channel.Source): ExoPlayerFragment {
             val videoDialogFragment = ExoPlayerFragment()
             val args = Bundle()
-            args.putSerializable(CHANNEL_KEY, channel)
+            args.putParcelable(CHANNEL_KEY, channel)
             videoDialogFragment.arguments = args
             return videoDialogFragment
         }
@@ -55,7 +55,7 @@ class ExoPlayerFragment : DialogFragment(), Player.EventListener {
 
         if (arguments != null) {
 
-            val channelUrl = arguments!!.getSerializable(CHANNEL_KEY) as Channel.Source
+            val channelUrl = arguments!!.getParcelable<Channel.Source>(CHANNEL_KEY)!!
             activity!!.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             loadVideo(channelUrl)
         }
@@ -75,35 +75,6 @@ class ExoPlayerFragment : DialogFragment(), Player.EventListener {
         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         exoPlayer.release()
     }
-
-    override fun onPlayerError(error: ExoPlaybackException) {
-
-        when (error.type) {
-
-            ExoPlaybackException.TYPE_SOURCE -> {
-                Toast.makeText(context, context?.getString(R.string.channel_detail_source_error_message), Toast.LENGTH_SHORT).show()
-                Log.e(TAG, "TYPE_SOURCE: " + error.sourceException.message)
-            }
-
-            ExoPlaybackException.TYPE_RENDERER -> {
-                Toast.makeText(context, context?.getString(R.string.channel_detail_renderer_error_message), Toast.LENGTH_SHORT).show()
-                Log.e(TAG, "TYPE_RENDERER: " + error.rendererException.message)
-            }
-
-            ExoPlaybackException.TYPE_UNEXPECTED -> {
-                Toast.makeText(context, context?.getString(R.string.channel_detail_unexpected_error_message), Toast.LENGTH_SHORT).show()
-                Log.e(TAG, "TYPE_UNEXPECTED: " + error.unexpectedException.message)
-            }
-
-            else -> {
-                Toast.makeText(context, context?.getString(R.string.channel_detail_unexpected_error_message), Toast.LENGTH_SHORT).show()
-                Log.e(TAG, "TYPE_UNKNOWN: " + error.cause!!.message)
-            }
-        }
-
-        dismiss()
-    }
-
 
     private fun resolveRedirectedURL(url: URL): URL {
         try {
@@ -131,10 +102,13 @@ class ExoPlayerFragment : DialogFragment(), Player.EventListener {
         return url
     }
 
+    fun setExoPlayerListener(listener: Player.EventListener){
+        exoPlayer = SimpleExoPlayer.Builder(context!!).build()
+        exoPlayer.addListener(listener)
+    }
 
     private fun loadVideo(source: Channel.Source) {
 
-        exoPlayer = SimpleExoPlayer.Builder(context!!).build()
         exoPlayerView!!.player = exoPlayer
 
         val dataSourceFactory = DefaultDataSourceFactory(context, DefaultHttpDataSourceFactory(
@@ -159,7 +133,5 @@ class ExoPlayerFragment : DialogFragment(), Player.EventListener {
         exoPlayer.prepare(videoSource!!)
         exoPlayer.playWhenReady = true
 
-        // Add listener for onPlayerError
-        exoPlayer.addListener(this)
     }
 }
