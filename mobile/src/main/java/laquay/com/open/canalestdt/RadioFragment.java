@@ -29,9 +29,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import laquay.com.open.canalestdt.component.ChannelListItem;
 import laquay.com.open.canalestdt.controller.APIController;
 import laquay.com.open.canalestdt.model.Channel;
+import laquay.com.open.canalestdt.model.ChannelListItem;
 import laquay.com.open.canalestdt.model.Country;
 import laquay.com.open.canalestdt.utils.SourcesManagement;
 

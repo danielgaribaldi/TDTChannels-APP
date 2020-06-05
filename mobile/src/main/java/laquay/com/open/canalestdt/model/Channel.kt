@@ -26,5 +26,9 @@ data class Channel(val name: String,
 data class Country(val name: String, val channelGroups: ArrayList<ChannelGroup>) : Serializable {
 
     data class ChannelGroup(val name: String, val channels: ArrayList<Channel>) : Serializable
-
 }
+
+
+data class ChannelListItem(val countryName: String,
+                           val communityName: String,
+                           val channel: Channel) : Serializable

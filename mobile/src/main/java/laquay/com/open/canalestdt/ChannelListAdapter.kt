@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import laquay.com.open.canalestdt.component.ChannelListItem
+import laquay.com.open.canalestdt.model.ChannelListItem
+
 
 class ChannelListAdapter(private val context: Context, private val listener: OnItemClickListener)
     : ListAdapter<ChannelListItem, ChannelListAdapter.ViewHolder>(object : DiffUtil.ItemCallback<ChannelListItem>() {
@@ -31,9 +32,9 @@ class ChannelListAdapter(private val context: Context, private val listener: OnI
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var imageView: ImageView = itemView.findViewById(R.id.channel_icon)
-        var titleView: TextView = itemView.findViewById(R.id.channel_title)
-        var subtitleView: TextView = itemView.findViewById(R.id.channel_description)
+        private var imageView: ImageView = itemView.findViewById(R.id.channel_icon)
+        private var titleView: TextView = itemView.findViewById(R.id.channel_title)
+        private var subtitleView: TextView = itemView.findViewById(R.id.channel_description)
 
         fun setChannel(channel: ChannelListItem){
 
