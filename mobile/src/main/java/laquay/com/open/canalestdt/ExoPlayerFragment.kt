@@ -67,40 +67,41 @@ class ExoPlayerFragment : DialogFragment(), Player.EventListener {
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    // Activity onStop, player must be release because of memory saving
     override fun onStop() {
+
         super.onStop()
 
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
         exoPlayer.release()
     }
 
     override fun onPlayerError(error: ExoPlaybackException) {
 
-        if (context != null) {
-            when (error.type) {
-                ExoPlaybackException.TYPE_SOURCE -> {
-                    Toast.makeText(context, context!!.getString(R.string.channel_detail_source_error_message), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "TYPE_SOURCE: " + error.sourceException.message)
-                }
-                ExoPlaybackException.TYPE_RENDERER -> {
-                    Toast.makeText(context, context!!.getString(R.string.channel_detail_renderer_error_message), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "TYPE_RENDERER: " + error.rendererException.message)
-                }
-                ExoPlaybackException.TYPE_UNEXPECTED -> {
-                    Toast.makeText(context, context!!.getString(R.string.channel_detail_unexpected_error_message), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "TYPE_UNEXPECTED: " + error.unexpectedException.message)
-                }
-                else -> {
-                    Toast.makeText(context, context!!.getString(R.string.channel_detail_unexpected_error_message), Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "TYPE_UNKNOWN: " + error.cause!!.message)
-                }
+        when (error.type) {
+
+            ExoPlaybackException.TYPE_SOURCE -> {
+                Toast.makeText(context, context?.getString(R.string.channel_detail_source_error_message), Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "TYPE_SOURCE: " + error.sourceException.message)
+            }
+
+            ExoPlaybackException.TYPE_RENDERER -> {
+                Toast.makeText(context, context?.getString(R.string.channel_detail_renderer_error_message), Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "TYPE_RENDERER: " + error.rendererException.message)
+            }
+
+            ExoPlaybackException.TYPE_UNEXPECTED -> {
+                Toast.makeText(context, context?.getString(R.string.channel_detail_unexpected_error_message), Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "TYPE_UNEXPECTED: " + error.unexpectedException.message)
+            }
+
+            else -> {
+                Toast.makeText(context, context?.getString(R.string.channel_detail_unexpected_error_message), Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "TYPE_UNKNOWN: " + error.cause!!.message)
             }
         }
 
-        activity?.onBackPressed()
+        dismiss()
     }
 
 
@@ -161,5 +162,4 @@ class ExoPlayerFragment : DialogFragment(), Player.EventListener {
         // Add listener for onPlayerError
         exoPlayer.addListener(this)
     }
-
 }
