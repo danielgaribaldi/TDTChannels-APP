@@ -126,7 +126,7 @@ class ExoPlayerFragment : DialogFragment() {
 
         val videoSource = when (source.type) {
             Channel.Source.Type.EXO_HLS -> HlsMediaSource.Factory(dataSourceFactory).createMediaSource(sourceUri)
-            Channel.Source.Type.YOUTUBE -> null
+            else -> null
         }
 
         // Prepare the player with the source.

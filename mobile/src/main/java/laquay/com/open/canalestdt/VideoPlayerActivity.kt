@@ -10,6 +10,8 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -112,7 +114,7 @@ class VideoPlayerActivity : AppCompatActivity() {
 
         this.lifecycle.addObserver(youtubePlayerView)
 
-       // youtubePlayerView.enterFullScreen()
+        // youtubePlayerView.enterFullScreen()
         youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
 
             override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -177,6 +179,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         val videoSource = when (source.type) {
             Channel.Source.Type.EXO_HLS -> HlsMediaSource.Factory(dataSourceFactory).createMediaSource(sourceUri)
             Channel.Source.Type.YOUTUBE -> null
+            Channel.Source.Type.EXO_DASH -> ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(sourceUri)
         }
 
         exoPlayer?.prepare(videoSource!!)
