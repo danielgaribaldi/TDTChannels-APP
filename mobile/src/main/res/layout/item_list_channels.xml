@@ -11,6 +11,7 @@
     <ImageView
         android:id="@+id/channel_icon"
         android:layout_width="0dp"
+        android:layout_margin="5dp"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:src="@mipmap/ic_launcher"
