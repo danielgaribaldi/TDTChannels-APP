@@ -49,6 +49,16 @@ class VideoPlayerActivity : AppCompatActivity() {
             loadSource()
         }
     }
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.video_player_activity)
+
+        exoPlayerView = findViewById(R.id.exoPlayerView)
+        youtubePlayerView = findViewById(R.id.youtubePlayerView)
+        loadSource()
+    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
 
@@ -61,16 +71,6 @@ class VideoPlayerActivity : AppCompatActivity() {
             }
         }
         return super.onKeyDown(keyCode, event)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.video_player_activity)
-
-        exoPlayerView = findViewById(R.id.exoPlayerView)
-        youtubePlayerView = findViewById(R.id.youtubePlayerView)
-        loadSource()
     }
 
     override fun onStart() {
