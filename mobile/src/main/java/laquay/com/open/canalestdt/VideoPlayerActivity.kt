@@ -3,15 +3,15 @@ package laquay.com.open.canalestdt
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.DialogFragment
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -39,6 +39,7 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     private var exoPlayer: SimpleExoPlayer? = null
     lateinit var sourcesQueue: ArrayDeque<Channel.Source>
+    private val handler = Handler()
 
     private val exoListener = object : Player.EventListener {
 
@@ -49,18 +50,66 @@ class VideoPlayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+
+        when (keyCode) {
+            KeyEvent.KEYCODE_BACK -> finish()
+            KeyEvent.KEYCODE_VOLUME_DOWN,
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                showSystemUI()
+                handler.postDelayed({ activateImmersiveMode() }, 1500)
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.video_player_activity)
+
+        exoPlayerView = findViewById(R.id.exoPlayerView)
+        youtubePlayerView = findViewById(R.id.youtubePlayerView)
+        loadSource()
+    }
+
     override fun onStart() {
         super.onStart()
         window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        activateImmersiveMode()
     }
 
     override fun onStop() {
 
         super.onStop()
 
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         exoPlayer?.release()
+    }
+
+    private fun loadSource() {
+
+        val channel = intent.getParcelableExtra<Channel>(CHANNEL)!!
+        sourcesQueue = ArrayDeque(channel.sources)
+
+        exoPlayerView.visibility = View.GONE
+        youtubePlayerView.visibility = View.GONE
+
+        try {
+            val source = sourcesQueue.removeFirst()
+
+            when (source.type) {
+
+                Channel.Source.Type.EXO_HLS -> loadExoPlayerSource(source)
+                Channel.Source.Type.YOUTUBE -> loadYoutubeSource(source,false)
+                Channel.Source.Type.EXO_DASH -> TODO()
+                Channel.Source.Type.YOUTUBE_LIVE -> loadYoutubeSource(source,true)
+            }
+
+        }
+        catch (e: NoSuchElementException) {
+            finish()
+        }
     }
 
     private fun getYoutubeID(url: String): String {
@@ -91,30 +140,15 @@ class VideoPlayerActivity : AppCompatActivity() {
         return videoID
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.video_player_activity)
-
-        exoPlayerView = findViewById(R.id.exoPlayerView)
-        youtubePlayerView = findViewById(R.id.youtubePlayerView)
-
-        //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-
-        val channel = intent.getParcelableExtra<Channel>(CHANNEL)!!
-
-        sourcesQueue = ArrayDeque(channel.sources)
-
-        loadSource()
-    }
-
-    private fun loadYoutubeSource(source: Channel.Source) {
+    private fun loadYoutubeSource(source: Channel.Source, live: Boolean) {
 
         youtubePlayerView.visibility = View.VISIBLE
 
         this.lifecycle.addObserver(youtubePlayerView)
 
-        // youtubePlayerView.enterFullScreen()
+        youtubePlayerView.getPlayerUiController().enableLiveVideoUi(live)
+
+        youtubePlayerView.enterFullScreen()
         youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
 
             override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -127,6 +161,37 @@ class VideoPlayerActivity : AppCompatActivity() {
                 loadSource()
             }
         })
+    }
+
+    private fun loadExoPlayerSource(source: Channel.Source) {
+
+        exoPlayerView.visibility = View.VISIBLE
+        exoPlayer = SimpleExoPlayer.Builder(this).build()
+        exoPlayer?.addListener(exoListener)
+        exoPlayerView.player = exoPlayer
+
+        val dataSourceFactory = DefaultDataSourceFactory(this, DefaultHttpDataSourceFactory(
+                USER_AGENT,
+                DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS * 10,
+                DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS * 10,
+                true
+        ))
+
+        val sourceUri = Uri.parse(if (source.resolveRedirect) {
+            resolveRedirectedURL(URL(source.url))
+        }
+                                  else {
+            URL(source.url)
+        }.toString())
+
+        val videoSource = when (source.type) {
+            Channel.Source.Type.EXO_HLS -> HlsMediaSource.Factory(dataSourceFactory).createMediaSource(sourceUri)
+            Channel.Source.Type.EXO_DASH -> ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(sourceUri)
+            else -> null
+        }
+
+        exoPlayer?.prepare(videoSource!!)
+        exoPlayer?.playWhenReady = true
     }
 
     private fun resolveRedirectedURL(url: URL): URL {
@@ -155,54 +220,22 @@ class VideoPlayerActivity : AppCompatActivity() {
         return url
     }
 
-    private fun loadExoPlayerSource(source: Channel.Source) {
-
-        exoPlayerView.visibility = View.VISIBLE
-        exoPlayer = SimpleExoPlayer.Builder(this).build()
-        exoPlayer?.addListener(exoListener)
-        exoPlayerView.player = exoPlayer
-
-        val dataSourceFactory = DefaultDataSourceFactory(this, DefaultHttpDataSourceFactory(
-                USER_AGENT,
-                DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS * 10,
-                DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS * 10,
-                true
-        ))
-
-        val sourceUri = Uri.parse(if (source.resolveRedirect) {
-            resolveRedirectedURL(URL(source.url))
+    private fun activateImmersiveMode() {
+        if (window != null) {
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         }
-                                  else {
-            URL(source.url)
-        }.toString())
-
-        val videoSource = when (source.type) {
-            Channel.Source.Type.EXO_HLS -> HlsMediaSource.Factory(dataSourceFactory).createMediaSource(sourceUri)
-            Channel.Source.Type.YOUTUBE -> null
-            Channel.Source.Type.EXO_DASH -> ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(sourceUri)
-        }
-
-        exoPlayer?.prepare(videoSource!!)
-        exoPlayer?.playWhenReady = true
     }
 
-    private fun loadSource() {
-
-        exoPlayerView.visibility = View.GONE
-        youtubePlayerView.visibility = View.GONE
-
-        try {
-            val source = sourcesQueue.removeFirst()
-
-            when (source.type) {
-
-                Channel.Source.Type.EXO_HLS -> loadExoPlayerSource(source)
-                Channel.Source.Type.YOUTUBE -> loadYoutubeSource(source)
-            }
-
-        }
-        catch (e: NoSuchElementException) {
-            finish()
+    private fun showSystemUI() {
+        if (window != null) {
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
         }
     }
 }

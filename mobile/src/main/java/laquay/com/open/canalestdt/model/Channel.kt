@@ -21,7 +21,8 @@ data class Channel(val name: String,
         enum class Type(value: String) {
             EXO_HLS("exo_hls"),
             EXO_DASH("exo_dash"),
-            YOUTUBE("youtube")
+            YOUTUBE("youtube"),
+            YOUTUBE_LIVE("youtube_live")
         }
     }
 }

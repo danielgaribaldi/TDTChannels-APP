@@ -53,6 +53,9 @@ class APIController private constructor() {
                                           Channel(name = "Giallo", logo = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Giallo_-_Logo_2014.svg/1200px-Giallo_-_Logo_2014.svg.png", sources = arrayListOf(Source(Source.Type.EXO_HLS, "https://sbshdlu5-lh.akamaihd.net/i/sbshdl_2@810996/master.m3u8"))),
                                           Channel(name = "Motor Trend", logo = "https://images-na.ssl-images-amazon.com/images/I/412-MY9AQmL._SY355_.png", sources = arrayListOf(Source(Source.Type.EXO_HLS, "https://sbshdlu5-lh.akamaihd.net/i/sbshdl_1@810993/master.m3u8"))),
                                           Channel(name = "Food Network", logo = "https://upload.wikimedia.org/wikipedia/commons/f/f9/Food_Network_New_Logo.png", sources = arrayListOf(Source(Source.Type.EXO_HLS, "https://sbshdlu5-lh.akamaihd.net/i/sbshdl_6@1000854/master.m3u8"))),
+                                          Channel(name = "TEST", logo = "", sources = arrayListOf(Source(Source.Type.YOUTUBE_LIVE, "https://www.youtube.com/watch?v=bWdjJ-dWQvo"))),
+                                          Channel(name = "TEST2", logo = "", sources = arrayListOf(Source(Source.Type.YOUTUBE, "https://www.youtube.com/watch?v=GrrMORBZv9w"))),
+
                                           Channel(name = "RealTime", logo = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Discovery_Real_Time_E.svg/1200px-Discovery_Real_Time_E.svg.png", sources = arrayListOf(Source(Source.Type.EXO_HLS, "https://sbshdlu5-lh.akamaihd.net/i/sbshdl_4@810998/master.m3u8"))))
 
             val communities = arrayListOf(Country.ChannelGroup("Rai", raiChannels),
