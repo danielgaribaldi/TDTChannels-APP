@@ -1,4 +1,4 @@
-package com.iptv.app
+package com.iptv.app.ui.player
 
 import android.net.Uri
 import android.os.Bundle
@@ -16,11 +16,12 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.iptv.app.R
+import com.iptv.app.model.Channel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-import com.iptv.app.model.Channel
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.regex.Pattern

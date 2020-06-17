@@ -1,4 +1,4 @@
-package com.iptv.app;
+package com.iptv.app.ui.channels;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +20,17 @@ import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.iptv.app.R;
+import com.iptv.app.controller.APIController;
+import com.iptv.app.model.Channel;
+import com.iptv.app.model.ChannelListItem;
+import com.iptv.app.model.Country;
+import com.iptv.app.ui.player.VideoPlayerActivity;
+import com.iptv.app.ui.channels.adapter.ChannelsAdapter;
+import com.iptv.app.utils.SourcesManagement;
+
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -30,29 +41,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+public class ChannelsFragment extends Fragment implements APIController.ResponseServerCallback {
 
-import com.iptv.app.controller.APIController;
-import com.iptv.app.model.Channel;
-import com.iptv.app.model.ChannelListItem;
-import com.iptv.app.model.Country;
-import com.iptv.app.utils.SourcesManagement;
-
-public class TVFragment extends Fragment implements APIController.ResponseServerCallback {
-
-    public static final String TAG = TVFragment.class.getSimpleName();
+    public static final String TAG = ChannelsFragment.class.getSimpleName();
     private View rootView;
     private RecyclerView channelRecyclerView;
-    private ChannelListAdapter channelAdapter;
+    private ChannelsAdapter channelAdapter;
     private ArrayList<Country> countries;
     private ArrayList<Country.ChannelGroup> communities;
     private ArrayList<ChannelListItem> channelLists;
     private ChannelItemFilter mFilter = new ChannelItemFilter();
     private boolean isShowingFavorites;
 
-    public static TVFragment newInstance() {
+    public static ChannelsFragment newInstance() {
 
-        return new TVFragment();
+        return new ChannelsFragment();
     }
 
     @Nullable
@@ -248,7 +251,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
             ((GridLayoutManager)channelRecyclerView.getLayoutManager()).setSpanCount(2);
         }
 
-        channelAdapter = new ChannelListAdapter(new ChannelListAdapter.OnItemClickListener() {
+        channelAdapter = new ChannelsAdapter(new ChannelsAdapter.OnItemClickListener() {
 
             @Override
             public void onItemClickListener(ChannelListItem channelList) {

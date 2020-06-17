@@ -24,7 +24,7 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name="com.iptv.app.MainActivity"
+            android:name="com.iptv.app.ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
 
@@ -36,7 +36,7 @@
         </activity>
 
         <activity
-            android:name="com.iptv.app.VideoPlayerActivity"
+            android:name="com.iptv.app.ui.player.VideoPlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTask"
             android:screenOrientation="sensor"

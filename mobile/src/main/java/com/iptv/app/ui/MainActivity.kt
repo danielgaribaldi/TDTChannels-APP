@@ -1,10 +1,12 @@
-package com.iptv.app
+package com.iptv.app.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.iptv.app.R
 import com.iptv.app.controller.SharedPreferencesController
+import com.iptv.app.ui.channels.ChannelsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadTVFragment() = supportFragmentManager.beginTransaction().apply {
-        replace(R.id.content_frame, TVFragment.newInstance(), TVFragment.TAG)
+        replace(R.id.content_frame, ChannelsFragment.newInstance(), ChannelsFragment.TAG)
         commit()
     }
 
