@@ -2,8 +2,10 @@ package laquay.com.open.canalestdt;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,6 +27,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ import laquay.com.open.canalestdt.model.Country;
 import laquay.com.open.canalestdt.utils.SourcesManagement;
 
 public class TVFragment extends Fragment implements APIController.ResponseServerCallback {
+
     public static final String TAG = TVFragment.class.getSimpleName();
     private View rootView;
     private RecyclerView channelRecyclerView;
@@ -47,18 +51,18 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
     private boolean isShowingFavorites;
 
     public static TVFragment newInstance() {
+
         return new TVFragment();
     }
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         setHasOptionsMenu(true);
         setUpElements();
-        setUpListeners();
 
         APIController.getInstance().loadChannels(APIController.TypeOfRequest.TV,
                 false, getContext(), this);
@@ -66,77 +70,18 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
         return rootView;
     }
 
-    private void setUpElements() {
-        channelRecyclerView = rootView.findViewById(R.id.channel_main_lv);
-        channelAdapter = new ChannelListAdapter(new ChannelListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClickListener(ChannelListItem channelList) {
-                openChannel(channelList);
-            }
-        });
-        channelAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                if (positionStart == 0 && channelRecyclerView.getLayoutManager() != null) {
-                    channelRecyclerView.getLayoutManager().scrollToPosition(0);
-                }
-            }
-        });
-        channelRecyclerView.setAdapter(channelAdapter);
-    }
-
-    private void setUpListeners() {
-
-    }
-
     @Override
     public void onChannelsLoadServer(ArrayList<Country> countries) {
+
         Log.i(TAG, "Redrawing channels - Start");
         this.countries = countries;
         createChannelList();
         Log.i(TAG, "Redrawing channels - End");
     }
 
-    private void createChannelList() {
-        channelLists = new ArrayList<>();
-
-        for (int i = 0; i < countries.size(); ++i) {
-            communities = countries.get(i).getChannelGroups();
-
-            for (int j = 0; j < communities.size(); ++j) {
-                ArrayList<Channel> channels = communities.get(j).getChannels();
-
-                if (isShowingFavorites) {
-                    for (int k = 0; k < channels.size(); ++k) {
-                        if (SourcesManagement.isTVChannelFavorite(channels.get(k).getName())) {
-                            channelLists.add(new ChannelListItem(countries.get(i).getName(),
-                                    communities.get(j).getName(), channels.get(k)));
-                        }
-                    }
-                } else {
-                    boolean isCommunityShown = SourcesManagement.isTVCommunitySelected("" + communities.get(j).getName());
-                    if (isCommunityShown) {
-                        for (int k = 0; k < channels.size(); ++k) {
-                            channelLists.add(new ChannelListItem(countries.get(i).getName(),
-                                    communities.get(j).getName(), channels.get(k)));
-                        }
-                    }
-                }
-            }
-        }
-
-        channelAdapter.submitList(channelLists);
-    }
-
-    public void openChannel(ChannelListItem channel) {
-
-        Intent intent = new Intent(getContext(),VideoPlayerActivity.class);
-        intent.putExtra(VideoPlayerActivity.CHANNEL, channel.getChannel());
-        startActivity(intent);
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+
         menuInflater.inflate(R.menu.fragment_tv, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
@@ -151,8 +96,10 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
 
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextSubmit(String query) {
+
                 return false;
             }
 
@@ -169,11 +116,13 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.action_favorites:
                 if (isShowingFavorites) {
                     item.setIcon(R.drawable.heart_outline);
-                } else {
+                }
+                else {
                     item.setIcon(R.drawable.heart);
                 }
                 isShowingFavorites = !isShowingFavorites;
@@ -198,7 +147,8 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
                         LinearLayout.LayoutParams countryParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         if (i == 0) {
                             countryParams.setMargins(0, 0, 0, 10);
-                        } else {
+                        }
+                        else {
                             countryParams.setMargins(0, 20, 0, 10);
                         }
                         country.setLayoutParams(countryParams);
@@ -230,7 +180,8 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
 
                             if (j % 2 == 0) {
                                 leftLayout.addView(community);
-                            } else {
+                            }
+                            else {
                                 rightLayout.addView(community);
                             }
                         }
@@ -244,7 +195,9 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
                     builder.setView(v);
                     builder.create();
                     builder.setPositiveButton(R.string.alert_dialog_ok, new DialogInterface.OnClickListener() {
+
                         public void onClick(DialogInterface dialog, int which) {
+
                             filterLL.getChildCount();
 
                             for (int i = 0; i < filterLL.getChildCount(); ++i) {
@@ -270,7 +223,9 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
                         }
                     });
                     builder.setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
+
                         public void onClick(DialogInterface dialog, int which) {
+
                         }
                     });
 
@@ -282,9 +237,100 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
         }
     }
 
+    private void setUpElements() {
+
+        channelRecyclerView = rootView.findViewById(R.id.channel_main_lv);
+
+        if(isDirectToTV()){
+            ((GridLayoutManager)channelRecyclerView.getLayoutManager()).setSpanCount(4);
+        }
+        else{
+            ((GridLayoutManager)channelRecyclerView.getLayoutManager()).setSpanCount(2);
+        }
+
+        channelAdapter = new ChannelListAdapter(new ChannelListAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClickListener(ChannelListItem channelList) {
+
+                openChannel(channelList);
+            }
+        });
+
+        channelAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+
+                if (positionStart == 0 && channelRecyclerView.getLayoutManager() != null) {
+                    channelRecyclerView.getLayoutManager().scrollToPosition(0);
+                }
+            }
+        });
+
+        channelRecyclerView.setAdapter(channelAdapter);
+    }
+
+    private void openChannel(ChannelListItem channel) {
+
+        Intent intent = new Intent(getContext(), VideoPlayerActivity.class);
+        intent.putExtra(VideoPlayerActivity.CHANNEL, channel.getChannel());
+        startActivity(intent);
+    }
+
+    private boolean isDirectToTV() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            return getActivity()
+                    .getPackageManager()
+                    .hasSystemFeature(PackageManager.FEATURE_LEANBACK);
+        }
+        else {
+            return getActivity()
+                    .getPackageManager()
+                    .hasSystemFeature(PackageManager.FEATURE_TELEVISION);
+        }
+    }
+
+    private void createChannelList() {
+
+        channelLists = new ArrayList<>();
+
+        for (int i = 0; i < countries.size(); ++i) {
+            communities = countries.get(i).getChannelGroups();
+
+            for (int j = 0; j < communities.size(); ++j) {
+                ArrayList<Channel> channels = communities.get(j).getChannels();
+
+                if (isShowingFavorites) {
+                    for (int k = 0; k < channels.size(); ++k) {
+                        if (SourcesManagement.isTVChannelFavorite(channels.get(k).getName())) {
+                            channelLists.add(new ChannelListItem(countries.get(i).getName(),
+                                    communities.get(j).getName(), channels.get(k)));
+                        }
+                    }
+                }
+                else {
+                    boolean isCommunityShown = SourcesManagement.isTVCommunitySelected("" + communities.get(j).getName());
+                    if (isCommunityShown) {
+                        for (int k = 0; k < channels.size(); ++k) {
+                            channelLists.add(new ChannelListItem(countries.get(i).getName(),
+                                    communities.get(j).getName(), channels.get(k)));
+                        }
+                    }
+                }
+            }
+        }
+
+        channelAdapter.submitList(channelLists);
+    }
+
     private class ChannelItemFilter extends Filter {
+
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+
             String filterString = constraint.toString().toLowerCase();
             FilterResults results = new FilterResults();
 
@@ -308,7 +354,9 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
+
             channelAdapter.submitList((ArrayList<ChannelListItem>) results.values);
         }
     }
+
 }
