@@ -9,6 +9,7 @@
         android:id="@+id/exoPlayerView"
         android:layout_width="match_parent"
         android:visibility="gone"
+        app:use_controller="false"
         android:layout_height="match_parent" />
 
     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
