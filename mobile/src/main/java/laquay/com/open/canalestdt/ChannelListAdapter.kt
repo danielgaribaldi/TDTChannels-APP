@@ -1,6 +1,5 @@
 package laquay.com.open.canalestdt
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,16 +15,21 @@ import laquay.com.open.canalestdt.model.ChannelListItem
 class ChannelViewHolder(itemView: View,
                         private val listener: ChannelListAdapter.OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
 
-    private var imageView: ImageView = itemView.findViewById(R.id.channel_icon)
-    private var titleView: TextView = itemView.findViewById(R.id.channel_title)
-    private var subtitleView: TextView = itemView.findViewById(R.id.channel_description)
+    private val imageView: ImageView = itemView.findViewById(R.id.channel_icon)
+    private val titleView: TextView = itemView.findViewById(R.id.channel_title)
+    private val subtitleView: TextView = itemView.findViewById(R.id.channel_description)
 
     fun setChannel(channel: ChannelListItem) {
 
         titleView.text = channel.channel.name
         subtitleView.text = channel.communityName
-        val imageUrl = channel.channel.logo
-        Glide.with(itemView.context).load(imageUrl).placeholder(R.mipmap.ic_launcher).fallback(R.mipmap.ic_launcher).into(imageView)
+
+        Glide.with(itemView.context)
+                .load(channel.channel.logo)
+                .placeholder(R.mipmap.ic_launcher)
+                .fallback(R.mipmap.ic_launcher)
+                .into(imageView)
+
         itemView.setOnClickListener { listener.onItemClickListener(channel) }
     }
 }
