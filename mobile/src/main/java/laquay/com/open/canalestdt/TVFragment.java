@@ -68,7 +68,7 @@ public class TVFragment extends Fragment implements APIController.ResponseServer
 
     private void setUpElements() {
         channelRecyclerView = rootView.findViewById(R.id.channel_main_lv);
-        channelAdapter = new ChannelListAdapter(getContext(), new ChannelListAdapter.OnItemClickListener() {
+        channelAdapter = new ChannelListAdapter(new ChannelListAdapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(ChannelListItem channelList) {
                 openChannel(channelList);

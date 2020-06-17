@@ -49,7 +49,7 @@ class VideoPlayerActivity : AppCompatActivity() {
             loadSource()
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -100,9 +100,9 @@ class VideoPlayerActivity : AppCompatActivity() {
 
             when (source.type) {
 
-                Channel.Source.Type.EXO_HLS -> loadExoPlayerSource(source)
+                Channel.Source.Type.EXO_HLS,
+                Channel.Source.Type.EXO_DASH -> loadExoPlayerSource(source)
                 Channel.Source.Type.YOUTUBE -> loadYoutubeSource(source,false)
-                Channel.Source.Type.EXO_DASH -> TODO()
                 Channel.Source.Type.YOUTUBE_LIVE -> loadYoutubeSource(source,true)
             }
 

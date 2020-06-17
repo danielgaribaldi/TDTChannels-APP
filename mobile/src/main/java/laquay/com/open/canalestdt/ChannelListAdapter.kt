@@ -13,8 +13,26 @@ import com.bumptech.glide.Glide
 import laquay.com.open.canalestdt.model.ChannelListItem
 
 
-class ChannelListAdapter(private val context: Context, private val listener: OnItemClickListener)
-    : ListAdapter<ChannelListItem, ChannelListAdapter.ViewHolder>(object : DiffUtil.ItemCallback<ChannelListItem>() {
+class ChannelViewHolder(itemView: View,
+                        private val listener: ChannelListAdapter.OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
+
+    private var imageView: ImageView = itemView.findViewById(R.id.channel_icon)
+    private var titleView: TextView = itemView.findViewById(R.id.channel_title)
+    private var subtitleView: TextView = itemView.findViewById(R.id.channel_description)
+
+    fun setChannel(channel: ChannelListItem) {
+
+        titleView.text = channel.channel.name
+        subtitleView.text = channel.communityName
+        val imageUrl = channel.channel.logo
+        Glide.with(itemView.context).load(imageUrl).placeholder(R.mipmap.ic_launcher).fallback(R.mipmap.ic_launcher).into(imageView)
+        itemView.setOnClickListener { listener.onItemClickListener(channel) }
+    }
+}
+
+
+class ChannelListAdapter(private val listener: OnItemClickListener)
+    : ListAdapter<ChannelListItem, ChannelViewHolder>(object : DiffUtil.ItemCallback<ChannelListItem>() {
 
     override fun areItemsTheSame(oldItem: ChannelListItem, newItem: ChannelListItem): Boolean {
         return oldItem == newItem
@@ -26,25 +44,11 @@ class ChannelListAdapter(private val context: Context, private val listener: OnI
 }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_list_channels, parent, false))
+            ChannelViewHolder(LayoutInflater.from(parent.context)
+                                      .inflate(R.layout.item_list_channels, parent, false), listener)
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.setChannel(getItem(position))
+    override fun onBindViewHolder(holder: ChannelViewHolder, position: Int) = holder.setChannel(getItem(position))
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private var imageView: ImageView = itemView.findViewById(R.id.channel_icon)
-        private var titleView: TextView = itemView.findViewById(R.id.channel_title)
-        private var subtitleView: TextView = itemView.findViewById(R.id.channel_description)
-
-        fun setChannel(channel: ChannelListItem){
-
-            titleView.text = channel.channel.name
-            subtitleView.text = channel.communityName
-            val imageUrl = channel.channel.logo
-            Glide.with(context).load(imageUrl).placeholder(R.mipmap.ic_launcher).fallback(R.mipmap.ic_launcher).into(imageView)
-            itemView.setOnClickListener { listener.onItemClickListener(channel) }
-        }
-    }
 
     interface OnItemClickListener {
         fun onItemClickListener(channelList: ChannelListItem)

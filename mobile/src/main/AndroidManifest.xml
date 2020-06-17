@@ -40,8 +40,5 @@
             android:screenOrientation="sensor"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity
-            android:name=".DetailChannelActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 </manifest>

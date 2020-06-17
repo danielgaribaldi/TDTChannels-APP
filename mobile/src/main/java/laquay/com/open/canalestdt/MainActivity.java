@@ -43,9 +43,6 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.nav_tv_channels) {
                 fragment = TVFragment.newInstance();
                 fragmentTAG = TVFragment.TAG;
-            } else if (id == R.id.nav_radio_channels) {
-                fragment = RadioFragment.newInstance();
-                fragmentTAG = RadioFragment.TAG;
             }
 
             if (fragment != null) {
