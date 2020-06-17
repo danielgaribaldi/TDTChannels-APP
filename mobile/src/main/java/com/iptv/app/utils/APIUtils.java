@@ -1,4 +1,4 @@
-package laquay.com.open.canalestdt.utils;
+package com.iptv.app.utils;
 
 public class APIUtils {
     private static final String BASE_URL = "http://www.tdtchannels.com/lists/";

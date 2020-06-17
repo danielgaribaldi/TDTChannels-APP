@@ -1,4 +1,4 @@
-package laquay.com.open.canalestdt;
+package com.iptv.app;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,11 +32,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import laquay.com.open.canalestdt.controller.APIController;
-import laquay.com.open.canalestdt.model.Channel;
-import laquay.com.open.canalestdt.model.ChannelListItem;
-import laquay.com.open.canalestdt.model.Country;
-import laquay.com.open.canalestdt.utils.SourcesManagement;
+import com.iptv.app.controller.APIController;
+import com.iptv.app.model.Channel;
+import com.iptv.app.model.ChannelListItem;
+import com.iptv.app.model.Country;
+import com.iptv.app.utils.SourcesManagement;
 
 public class TVFragment extends Fragment implements APIController.ResponseServerCallback {
 

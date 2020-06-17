@@ -1,6 +1,6 @@
-package laquay.com.open.canalestdt.utils;
+package com.iptv.app.utils;
 
-import laquay.com.open.canalestdt.controller.SharedPreferencesController;
+import com.iptv.app.controller.SharedPreferencesController;
 
 public class SourcesManagement {
     public static boolean isTVChannelFavorite(String channelName) {

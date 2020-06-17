@@ -1,11 +1,11 @@
-package laquay.com.open.canalestdt.controller
+package com.iptv.app.controller
 
 import android.content.Context
 import android.util.Log
-import laquay.com.open.canalestdt.model.Channel
-import laquay.com.open.canalestdt.model.Channel.Source
-import laquay.com.open.canalestdt.model.Country
-import laquay.com.open.canalestdt.utils.APIUtils
+import com.iptv.app.model.Channel
+import com.iptv.app.model.Channel.Source
+import com.iptv.app.model.Country
+import com.iptv.app.utils.APIUtils
 
 class APIController private constructor() {
     private var televisionChannels: ArrayList<Country> = ArrayList()

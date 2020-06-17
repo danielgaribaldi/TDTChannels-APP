@@ -1,4 +1,4 @@
-package laquay.com.open.canalestdt.controller;
+package com.iptv.app.controller;
 
 import android.content.Context;
 

@@ -1,6 +1,5 @@
-package laquay.com.open.canalestdt
+package com.iptv.app
 
-import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -21,7 +20,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstan
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-import laquay.com.open.canalestdt.model.Channel
+import com.iptv.app.model.Channel
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.regex.Pattern

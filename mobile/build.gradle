@@ -6,8 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "laquay.com.open.canalestdt"
-        minSdkVersion 19
+        applicationId "com.iptv.app"
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 13
         versionName "v0.6.2"

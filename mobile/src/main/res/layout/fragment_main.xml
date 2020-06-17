@@ -10,4 +10,4 @@
     android:padding="4dp"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
     app:spanCount="4"
-    tools:context=".MainActivity" />
+    tools:context="com.iptv.app.MainActivity" />

@@ -1,4 +1,4 @@
-package laquay.com.open.canalestdt
+package com.iptv.app
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import laquay.com.open.canalestdt.model.ChannelListItem
+import com.iptv.app.model.ChannelListItem
 
 
 class ChannelViewHolder(itemView: View,
@@ -49,7 +49,7 @@ class ChannelListAdapter(private val listener: OnItemClickListener)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             ChannelViewHolder(LayoutInflater.from(parent.context)
-                                      .inflate(R.layout.item_list_channels, parent, false), listener)
+                                                                            .inflate(R.layout.item_list_channels, parent, false), listener)
 
     override fun onBindViewHolder(holder: ChannelViewHolder, position: Int) = holder.setChannel(getItem(position))
 

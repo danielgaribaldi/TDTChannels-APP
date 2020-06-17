@@ -1,10 +1,10 @@
-package laquay.com.open.canalestdt
+package com.iptv.app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import laquay.com.open.canalestdt.controller.SharedPreferencesController
+import com.iptv.app.controller.SharedPreferencesController
 
 class MainActivity : AppCompatActivity() {
 

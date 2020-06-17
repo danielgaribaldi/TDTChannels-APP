@@ -1,8 +1,7 @@
-package laquay.com.open.canalestdt.model
+package com.iptv.app.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import java.io.Serializable
 import java.util.*
 
 @Parcelize
