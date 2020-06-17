@@ -146,8 +146,6 @@ class VideoPlayerActivity : AppCompatActivity() {
         this.lifecycle.addObserver(youtubePlayerView)
 
         youtubePlayerView.getPlayerUiController().enableLiveVideoUi(live)
-
-        youtubePlayerView.enterFullScreen()
         youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
 
             override fun onReady(youTubePlayer: YouTubePlayer) {
